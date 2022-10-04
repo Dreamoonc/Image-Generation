@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Nasa Hack</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200&display=swap" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <section class="center">
+        <div class="first-part" id="part1">
+            <h1>Draw Your Imagination</h1>
+            <p class="detail">ML/AI app that allows users to introduce short sentences and display the generated image</p>
+            <div class="generate">
+                <div id="post-form">
+                    {% csrf_token %}
+                    <input type="text" id="textfield" name="textfield" class="search-inp"
+                        placeholder="write your dreams ...  " />
+                    <button class="btn" id="btn" onclick="affichImg()">Generate</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="Img-Affich active" id="affch">
+        <img class="close" onclick="closeimg()" src="static/img/Vector.png" />
+        <div class="general">
+            <div class="img-part">
+                
+                <img class="img-generate" src="{{link}}" alt="dog" id="imageGenerated" />
+            </div>
+        </div>
+    </section>
+    
+    <!-- SCRIPT -->
+
+    <script>
+        let fileInput = document.getElementById('imageGenerated').getAttribute('src')
+        var model = document.getElementById('affch');
+        var ferme = document.getElementsByClassName('close');
+        var generatebtn= document.getElementById("btn");
+ 
+
+        function affichImg() {
+            generatebtn.innerText = "Loading...";
+            $.ajax({
+                type: 'POST',
+                url: '/create',
+                data: {
+                    textfield: $('#textfield').val(),
+                },
+            }).then(data => {
+                    model.style.display = 'block';
+                    // document.getElementById('btn').style.display = 'none';
+                    document.getElementById('imageGenerated').setAttribute('src', data);
+                    document.getElementById('inputLink').setAttribute('value', data);
+                    fileInput = document.getElementById('imageGenerated').getAttribute('src')
+                    ;
+                    
+            });
+        }
+
+        function closeimg(){
+            generatebtn.innerText ='Generate';
+            model.style.display='none';
+
+        }
+
+       
+    </script>
+</body>
+
+</html>
